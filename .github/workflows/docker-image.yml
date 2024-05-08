@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main", "charles", "matt" ]
+  pull_request:
+    branches: [ "main", "charles", "matt" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Python Application
+      run: docker build . --file Dockerfile --tag flask_app:$(date +%s)
+    - name: Build MySQL Application
+      run: docker build ./db/ --file Dockerfile --tag mysql:$(date +%s)
