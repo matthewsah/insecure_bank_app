@@ -5,25 +5,29 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # depends_on:
-    #   - mysql_db
+    depends_on:
+      - mysql_db
+    ports:
+      - "8080:8080"
     networks:
       - my_network
 
-  # mysql_db:
-  #   image: mysql:latest
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: 'flask_app_db'
-  #     MYSQL_USER: 'flask_user'
-  #     MYSQL_PASSWORD: 'password'
-  #     MYSQL_ROOT_PASSWORD: 'root_password'
-  #   ports:
-  #     - "3306:3306"
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   networks:
-  #     - my_network
+  mysql_db:
+    build:
+      context: db
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'flask_app_db'
+      MYSQL_USER: 'flask_user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'root_password'
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - my_network
 
 networks:
   my_network:
