@@ -1,6 +1,7 @@
 FROM mariadb:10.6.2
 
 ENV MYSQL_DATABASE=flask_app
+ENV MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
 
 COPY db /docker-entrypoint-initdb.d
 
