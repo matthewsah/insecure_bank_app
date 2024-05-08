@@ -17,4 +17,4 @@ jobs:
     - name: Build Python Application
       run: docker build . --file Dockerfile --tag flask_app:$(date +%s)
     - name: Build MySQL Application
-      run: docker build ./db/ --file Dockerfile --tag mysql:$(date +%s)
+      run: docker build ./db/ --file db/Dockerfile --tag mysql:$(date +%s)
