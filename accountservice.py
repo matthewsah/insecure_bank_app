@@ -63,7 +63,7 @@ class AccountService:
     def createAccount(self, customer_id, account_name, balance, account_type):
         # create account based on balance and account type
         query = f"INSERT INTO Account VALUES (DEFAULT, {customer_id}, '{account_name}', {balance}, '{account_type}');"
-        print(query)
+
         # update database with mysql
         try:
             conn = mariadb.connect(**config)
@@ -122,7 +122,7 @@ class AccountService:
         return None
 
 if __name__ == "__main__":
-    AccountService().createAccount(1,1,100,"cd")
+    AccountService().createAccount(1,'sample account', 100,"cd")
     AccountService().withdraw(1, 10)
     AccountService().withdraw(1, 10)
     AccountService().deposit(1, 10)
