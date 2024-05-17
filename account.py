@@ -10,5 +10,4 @@ class Account:
             raise ValueError('invalid balance')
         self.account_id = account_id
         self.balance = balance
-        
         self.account_type = account_type

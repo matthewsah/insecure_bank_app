@@ -121,7 +121,8 @@ class AccountService:
         # return nothing because we're moving back to customer page
         return None
 
-AccountService().createAccount(1,1,100,"cd")
-AccountService().withdraw(1, 10)
-AccountService().withdraw(1, 10)
-AccountService().deposit(1, 10)
+if __name__ == "__main__":
+    AccountService().createAccount(1,1,100,"cd")
+    AccountService().withdraw(1, 10)
+    AccountService().withdraw(1, 10)
+    AccountService().deposit(1, 10)
