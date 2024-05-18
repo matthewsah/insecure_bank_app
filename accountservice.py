@@ -40,7 +40,7 @@ class AccountService:
 	
     def getAccountById(self, account_id):
         # get specific account within customer
-        query = f"SELECT account_id, balance, account_type FROM Account WHERE account_id={account_id};"
+        query = f"SELECT account_id, account_name, balance, account_type FROM Account WHERE account_id={account_id};"
      	# load account object
         # do fetch one
         # result_account = Account(account_id, balance, account_type)
@@ -51,8 +51,8 @@ class AccountService:
             conn.commit()
 
             # (acc_id, balance, account_type) = cursor.fetchone()
-            for (acc_id, balance, account_type) in cursor:
-                result_account = Account(acc_id, balance, account_type)
+            for (acc_id, account_name, balance, account_type) in cursor:
+                result_account = Account(acc_id, account_name, balance, account_type)
             return result_account
         finally:
             cursor.close()
@@ -63,7 +63,7 @@ class AccountService:
     def createAccount(self, customer_id, account_name, balance, account_type):
         # create account based on balance and account type
         query = f"INSERT INTO Account VALUES (DEFAULT, {customer_id}, '{account_name}', {balance}, '{account_type}');"
-        
+
         # update database with mysql
         try:
             conn = mariadb.connect(**config)
@@ -121,7 +121,8 @@ class AccountService:
         # return nothing because we're moving back to customer page
         return None
 
-AccountService().createAccount(1,1,100,"cd")
-AccountService().withdraw(1, 10)
-AccountService().withdraw(1, 10)
-AccountService().deposit(1, 10)
+if __name__ == "__main__":
+    AccountService().createAccount(1,'sample account', 100,"cd")
+    AccountService().withdraw(1, 10)
+    AccountService().withdraw(1, 10)
+    AccountService().deposit(1, 10)

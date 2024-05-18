@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <!-- customer_id, account_name, balance, account_type -->
+    <h1>Create an Account</h1>
+    <form method="POST">
+        <div>
+            <label for="customer_id">Enter Customer Id:</label>
+            <input type="number" min="0" name="customer_id">
+        </div>
+        <div>
+            <label for="account_name">Enter Account Name:</label>
+            <input type="text" name="account_name">
+        </div>
+        <div>
+            <label for="balance">Enter Balance:</label>
+            <input type="number" min="0" name="balance">
+        </div>
+        <div>
+            <label for="account_type">Enter Account Type:</label>
+            <input type="text" name="account_type">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    {% with err = error %}
+        {% if err %}
+            <div style="color: red; font-weight: bold;">
+                {{ err }}
+            </div>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
