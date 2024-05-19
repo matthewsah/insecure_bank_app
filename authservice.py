@@ -2,34 +2,6 @@ import mysql.connector
 import hashlib
 from flask import session
 
-config = {
-    'user': 'root',
-    'password': '',
-    'host': '127.0.0.1',
-    'database': 'flask_app',
-    'raise_on_warnings': True
-}
-
-try:
-    # Establish a database connection
-    conn = mysql.connector.connect(**config)
-    print("Connection successful!")
-
-    # Create a cursor object
-    cursor = conn.cursor()
-
-    # Execute a query
-    cursor.execute("SELECT DATABASE();")
-
-    # Fetch the result
-    database_name = cursor.fetchone()
-    print(f"Connected to database: {database_name[0]}")
-
-finally:
-    # Close the cursor and connection
-    cursor.close()
-    conn.close()
-
 class AuthService:
     def __init__(self):
         pass
@@ -64,6 +36,11 @@ class AuthService:
             cursor.close()
             conn.close()
         
-        return customer_id
+        if customer_id:
+            session['username'] = username
+            session['customer_id'] = customer_id
+        
+        print('the session is now ', session)
+        return session
 
     
