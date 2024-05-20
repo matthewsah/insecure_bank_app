@@ -23,8 +23,9 @@ def signup():
             print('registered')
         
             # change to reroute to login page
-            return render_template('login.html')
+            return redirect(url_for('auth.login'))
         except:
+            print('why')
             print('exception caught')
             return render_template('signup.html',
                                 title="Sign Up", 
@@ -46,7 +47,7 @@ def login():
         print(authservice.login(data1['username'], data1['password']))
 
         if 'username' in session:
-            return render_template('index.html', session=session)
+            return redirect(url_for('index', session=session))
         else:
             return render_template('login.html')
     return render_template('login.html')

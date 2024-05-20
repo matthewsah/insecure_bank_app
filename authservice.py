@@ -15,11 +15,13 @@ class AuthService:
         pass
 
     def register(self, username, password):
+        print('making db connection')
         conn = mariadb.connect(**config)
+        print('connection made')
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
-        query = f'INSERT INTO Customer VALUES ({username}, {hashed_pass});'
+        query = f"INSERT INTO Customer (username, password) VALUES ('{username}', '{hashed_pass}');"
         print('query is ', query)
 
         try:
@@ -28,6 +30,8 @@ class AuthService:
             print('got cursor')
             cursor.execute(query)
             print('executing query')
+        except Exception as exception:
+            print('caught exception:', exception)
         finally:
             cursor.close()
             conn.close()
@@ -37,18 +41,22 @@ class AuthService:
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
-        query = f'SELECT customer_id, username FROM Customer WHERE username="{username}" AND password="{hashed_pass}"'
+        query = f"SELECT customer_id, username FROM Customer WHERE username='{username}' AND password='{hashed_pass}';"
         
         # customer_id = None
         # username = None
-
+        res = None
         try:
             cursor = conn.cursor()
-            res = cursor.execute(query)
+            print('got cursor')
+            print('executing query ', query)
+            cursor.execute(query)
+            print('res', cursor.fetchone())
         finally:
             cursor.close()
             conn.close()
         
+        print('res is ', res)
         if res:
             session['customer_id'], session['username'] = res[0], res[1]
         

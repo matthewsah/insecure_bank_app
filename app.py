@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'x162klqzp23p01nIug'
 
 @app.route('/')
-def hello_world():
+def index():
     return render_template('index.html', title="Homepage", session=session)
 
 app.register_blueprint(account_blueprint)
