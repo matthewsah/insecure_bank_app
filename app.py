@@ -1,6 +1,7 @@
 from flask import Flask, render_template, session
 from accountroutes import account_blueprint
-import mysql.connector
+from authroutes import auth_blueprint
+import mariadb
 
 app = Flask(__name__)
 
@@ -12,10 +13,11 @@ config = {
     'raise_on_warnings': True
 }
 
+# not sure if this is actually needed anymore
 def get_db_connection():
     """Establish and return a database connection."""
     try:
-        conn = mysql.connector.connect(**config)
+        conn = mariadb.connect(**config)
         print("Connection successful!")
         return conn
     except:
@@ -27,5 +29,6 @@ def hello_world():
     return render_template('index.html', title="Homepage", session=session)
 
 app.register_blueprint(account_blueprint)
+app.register_blueprint(auth_blueprint)
 
 app.run(host="0.0.0.0",port=8080,debug=True)

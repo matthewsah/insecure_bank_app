@@ -1,19 +1,27 @@
-import mysql.connector
 import hashlib
 from flask import session
+import mariadb
+
+config = {
+     'user': 'root',
+     'password': '',
+     'host': '127.0.0.1',
+     'port': 3306,
+     'database': 'flask_app',
+ }
 
 class AuthService:
     def __init__(self):
         pass
 
     def register(self, username, password):
+        conn = mariadb.connect(**config)
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
         query = f'INSERT INTO Customer VALUES ({username}, {hashed_pass});'
 
         try:
-            conn = mysql.connector.connect(**config)
             cursor = conn.cursor()
             cursor.execute(query)
         finally:
@@ -21,6 +29,7 @@ class AuthService:
             conn.close()
     
     def login(self, username, password):
+        conn = mariadb.connect(**config)
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
@@ -29,7 +38,6 @@ class AuthService:
         customer_id = None
         
         try:
-            conn = mysql.connector.connect(**config)
             cursor = conn.cursor()
             customer_id = cursor.execute(query)
         finally:
@@ -40,7 +48,5 @@ class AuthService:
             session['username'] = username
             session['customer_id'] = customer_id
         
-        print('the session is now ', session)
         return session
-
     
