@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from authservice import AuthService
 
 auth_blueprint = Blueprint('auth', __name__)
@@ -7,9 +7,9 @@ authservice = AuthService()
     
 @auth_blueprint.route('/signup', methods=['GET', 'POST'])
 def signup():
-    try:
-        if request.method == 'POST':
-            print('trying to post')
+    if request.method == 'POST':
+        print('trying to post')
+        try:
             data = request.form
 
             # print(data['account_name'])
@@ -19,15 +19,34 @@ def signup():
             }
 
             print('received', data1)
-            authservice.register(data1['username'], data1['account_name'], data1['password'])
+            authservice.register(data1['username'], data1['password'])
+            print('registered')
         
             # change to reroute to login page
-            return data1
-        else:
+            return render_template('login.html')
+        except:
+            print('exception caught')
             return render_template('signup.html',
-                                   title="Login")
-    except Exception as e:
-        print('exception caught')
-        return render_template('createuser.html',
-                               title="Sign Up", 
-                               error="Unable to sign up, please check input data.")
+                                title="Sign Up", 
+                                error="Unable to sign up, please check input data.")
+    print('GET')
+    return render_template('signup.html')
+
+@auth_blueprint.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        data = request.form
+
+        data1 = {
+            'username': data['username'],
+            'password': data['password']
+        }
+
+        print('received', data1)
+        print(authservice.login(data1['username'], data1['password']))
+
+        if 'username' in session:
+            return render_template('index.html', session=session)
+        else:
+            return render_template('login.html')
+    return render_template('login.html')

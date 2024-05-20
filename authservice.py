@@ -5,7 +5,7 @@ import mariadb
 config = {
      'user': 'root',
      'password': '',
-     'host': '127.0.0.1',
+     'host': '127.0.0.1', # try changing to localhost
      'port': 3306,
      'database': 'flask_app',
  }
@@ -20,10 +20,14 @@ class AuthService:
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
         query = f'INSERT INTO Customer VALUES ({username}, {hashed_pass});'
+        print('query is ', query)
 
         try:
+            print('getting cursor')
             cursor = conn.cursor()
+            print('got cursor')
             cursor.execute(query)
+            print('executing query')
         finally:
             cursor.close()
             conn.close()
@@ -33,20 +37,20 @@ class AuthService:
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
-        query = f'SELECT customer_id FROM Customer WHERE username={username} AND password={hashed_pass}'
+        query = f'SELECT customer_id, username FROM Customer WHERE username="{username}" AND password="{hashed_pass}"'
         
-        customer_id = None
-        
+        # customer_id = None
+        # username = None
+
         try:
             cursor = conn.cursor()
-            customer_id = cursor.execute(query)
+            res = cursor.execute(query)
         finally:
             cursor.close()
             conn.close()
         
-        if customer_id:
-            session['username'] = username
-            session['customer_id'] = customer_id
+        if res:
+            session['customer_id'], session['username'] = res[0], res[1]
         
         return session
     
