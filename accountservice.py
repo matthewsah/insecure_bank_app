@@ -14,7 +14,7 @@ class AccountService:
     def __init__(self):
         pass
     
-    def getCustomerById(self, customer_id):
+    def getAccounts(self, customer_id):
         # join customer id by customer id inside accounts table
         query = f"SELECT username, account_id, balance, account_type FROM Customer c JOIN Account a ON c.customer_id = a.customer_id WHERE c.customer_id = {customer_id};"
         
@@ -23,14 +23,18 @@ class AccountService:
             # do fetch all
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
+            print('executing query', query)
             cursor.execute(query)
+            conn.commit()
             uname = None
             account_list = []
-            for (username, account_id, balance, account_type) in cursor:
+            for (username, account_id, balance, account_type) in cursor.fetchall():
+                print(username, account_id, balance, account_type)
                 uname = username
                 account_list.append((account_id, balance, account_type))
             unmodifiable_account_list = tuple(account_list)
-            # result_customer = Customer(uname, unmodifiable_account_list)
+            result_customer = Customer(uname, unmodifiable_account_list)
+            return result_customer
             # return result_customer
         finally:
             cursor.close()

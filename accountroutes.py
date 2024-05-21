@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from accountservice import AccountService
 
 account_blueprint = Blueprint('account', __name__)
@@ -13,7 +13,7 @@ def create_account():
 
             # print(data['account_name'])
             data1 = {
-                'customer_id': data['customer_id'],
+                'customer_id': session['customer_id'],
                 'account_name': data['account_name'],
                 'balance':  data['balance'],
                 'account_type': data['account_type']
@@ -23,7 +23,7 @@ def create_account():
             accservice.createAccount(data1['customer_id'], data1['account_name'], int(data1['balance']), data1['account_type'])
 
             # go back to customer dashboard
-            return data1
+            return redirect(url_for('index', session=session))
         else:
             return render_template('createaccount.html',
                                    title="Create an Account")
@@ -31,6 +31,12 @@ def create_account():
         return render_template('createaccount.html',
                                title="Create an Account", 
                                error="Unable to create account, please check input data.")
+
+@account_blueprint.route('/accounts', methods=['GET'])
+def get_accounts():
+    customer_id = session['customer_id']
+    accounts = accservice.getAccounts(customer_id)
+    print(accounts)
 
 @account_blueprint.route('/account/<int:account_id>', methods=['GET'])
 def account(account_id, error=None):
