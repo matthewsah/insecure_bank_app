@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from authservice import AuthService
+import re
 
 auth_blueprint = Blueprint('auth', __name__)
 
@@ -17,6 +18,10 @@ def signup():
                 'username': data['username'],
                 'password': data['password']
             }
+
+            pattern = r'[_\-\.0-9a-z]'
+            if not re.match(pattern, data['username']):
+                raise ValueError('Unable to sign up, please check input data.')
 
             print('received', data1)
             authservice.register(data1['username'], data1['password'])

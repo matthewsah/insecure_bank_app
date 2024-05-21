@@ -2,8 +2,12 @@ from flask import Flask, render_template, session
 from accountroutes import account_blueprint
 from authroutes import auth_blueprint
 from accountservice import AccountService
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
 app.config['SECRET_KEY'] = 'x162klqzp23p01nIug'
 
 accservice = AccountService()

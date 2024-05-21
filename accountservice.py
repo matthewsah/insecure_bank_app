@@ -88,6 +88,9 @@ class AccountService:
         # validate balance
         balance = result_account.balance - change
 
+        if balance < 0:
+            raise ValueError(f"Cannot withdraw more than balance: {result_account.balance}")
+
         # update result_account.balance - change
         query = f"UPDATE Account SET balance = {balance} WHERE account_id = {account_id};"
 
@@ -109,6 +112,9 @@ class AccountService:
 
         # validate balance
         balance = result_account.balance + change
+
+        if balance < 0:
+            raise ValueError(f"Cannot withdraw more than balance: {result_account.balance}")
 
         # update result_account.balance + change
         query = f"UPDATE Account SET balance = {balance} WHERE account_id = {account_id};"

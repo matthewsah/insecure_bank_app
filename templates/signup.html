@@ -9,4 +9,11 @@
     <input type="password" id="password" name="password"/>
     <button type="submit">Submit</button>
 </form>
+{% with err = error %}
+{% if err %}
+    <div style="color: red; font-weight: bold;">
+        {{ err }}
+    </div>
+{% endif %}
+{% endwith %}
 {% endblock %}

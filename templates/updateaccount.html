@@ -33,14 +33,14 @@
         function withdraw() {
             var form = document.getElementById("withdrawDepositForm");
             form.method="POST";
-            form.action = window.location.href + "/withdraw";
+            form.action = (window.location.href).split("?error")[0] + "/withdraw";
             form.submit();
         }
 
         function deposit() {
             var form = document.getElementById("withdrawDepositForm");
             form.method="POST";
-            form.action = window.location.href + "/deposit";
+            form.action = (window.location.href).split("?error")[0] + "/deposit";
             form.submit();
         }
     </script>
