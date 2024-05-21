@@ -4,5 +4,17 @@
 <h1>Welcome {{ session['username'] if session['username'] else '' }}</h1>
 {{ session }}
 <br>
+
+{% if "username" in session %}
 <a href="/account">Create an Account</a>
+<hr>
+{% for account in customer.accounts %}
+
+    <hr>
+        <div><a href="account/{{account[0]}}">Account Id: {{ account[0] }} </a></div>
+        <div>Account Balance: {{ account[1] }}</div>
+        <div>Account Type: {{ account[2] }}</div>
+    <hr>
+{% endfor %}
+{% endif %}
 {% endblock %}

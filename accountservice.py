@@ -23,21 +23,19 @@ class AccountService:
             # do fetch all
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            print('EXECUTING QUERY', query)
+            print('executing query', query)
             cursor.execute(query)
             conn.commit()
             uname = None
             account_list = []
-            for (username, account_id, balance, account_type) in cursor:
-                print('STUFF', username, account_id, balance, account_type)
+            for (username, account_id, balance, account_type) in cursor.fetchall():
+                print(username, account_id, balance, account_type)
                 uname = username
                 account_list.append((account_id, balance, account_type))
             unmodifiable_account_list = tuple(account_list)
             result_customer = Customer(uname, unmodifiable_account_list)
             return result_customer
             # return result_customer
-        except Exception as e:
-            print('CAUGHT EXECEPTION', str(e))
         finally:
             cursor.close()
             conn.close()
