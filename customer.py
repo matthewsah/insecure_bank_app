@@ -1,7 +1,7 @@
 import re
 from typing import final
 
-pattern = r'^[_-.0-9a-z]{1,127}$'
+pattern = r'^[_\-.0-9a-z]{1,127}$'
 
 @final
 class Customer:
