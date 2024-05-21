@@ -16,7 +16,6 @@ class AuthService:
 
     def register(self, username, password):
         print('making db connection')
-        conn = mariadb.connect(**config)
         print('connection made')
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
@@ -25,11 +24,13 @@ class AuthService:
         print('query is ', query)
 
         try:
+            conn = mariadb.connect(**config)
             print('getting cursor')
             cursor = conn.cursor()
             print('got cursor')
             cursor.execute(query)
             print('executing query')
+            conn.commit()
         except Exception as exception:
             print('caught exception:', exception)
         finally:
@@ -37,7 +38,6 @@ class AuthService:
             conn.close()
     
     def login(self, username, password):
-        conn = mariadb.connect(**config)
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
@@ -47,11 +47,12 @@ class AuthService:
         # username = None
         res = None
         try:
+            conn = mariadb.connect(**config)
             cursor = conn.cursor()
             print('got cursor')
             print('executing query ', query)
             cursor.execute(query)
-            print('res', cursor.fetchone())
+            res = cursor.fetchone()
         finally:
             cursor.close()
             conn.close()
