@@ -1,7 +1,6 @@
 from flask import Flask, render_template, session
 from accountroutes import account_blueprint
 from authroutes import auth_blueprint
-import mariadb
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'x162klqzp23p01nIug'

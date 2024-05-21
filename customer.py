@@ -1,13 +1,12 @@
 import re
 from typing import final
 
-pattern = r'^[_\-.0-9a-z]{1,127}$'
+# pattern = r'[a-z0-9]'
 
 @final
 class Customer:
     def __init__(self, username: str, accounts: tuple = ()):
-        if username == None or not re.match(pattern, username):
+        if username == None:
             raise ValueError("username cannot be null")
-        
         self.username = username
         self.accounts = accounts

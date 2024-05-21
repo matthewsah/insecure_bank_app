@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Welcome {{ session['username']  }}</h1>
+<h1>Welcome {{ session['username'] if session['username'] else '' }}</h1>
 {{ session }}
 <br>
 <a href="/account">Create an Account</a>

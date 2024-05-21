@@ -35,8 +35,9 @@ def create_account():
 @account_blueprint.route('/accounts', methods=['GET'])
 def get_accounts():
     customer_id = session['customer_id']
-    accounts = accservice.getAccounts(customer_id)
-    print(accounts)
+    customer_result = accservice.getAccounts(customer_id)
+    print(customer_result)
+    return None
 
 @account_blueprint.route('/account/<int:account_id>', methods=['GET'])
 def account(account_id, error=None):
