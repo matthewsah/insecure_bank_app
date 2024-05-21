@@ -1,4 +1,4 @@
-use flask_app;
+-- use flask_app;
 
 CREATE TABLE Customer (
     customer_id INT AUTO_INCREMENT NOT NULL,
