@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+
+<body>
+    <div>
+        <p>Account Name: {{ account_name }}</p>
+    </div>
+    <div>
+        <p>Balance: {{ balance }}</p>
+    </div>
+    <form id="withdrawDepositForm" method="POST">
+        <label for="change">Balance: </label>
+        <input type="number" name="change" min="0">
+        <button type="submit" onclick="deposit()">deposit</button>
+        <button type="submit" onclick="withdraw()">withdraw</button>
+    </form>
+    {% with err = error %}
+        {% if err %}
+            <div style="color: red; font-weight: bold;">
+                {{ err }}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <script>
+        function withdraw() {
+            var form = document.getElementById("withdrawDepositForm");
+            form.method="POST";
+            form.action = window.location.href + "/withdraw";
+            form.submit();
+        }
+
+        function deposit() {
+            var form = document.getElementById("withdrawDepositForm");
+            form.method="POST";
+            form.action = window.location.href + "/deposit";
+            form.submit();
+        }
+    </script>
+</body>
+
+</html>
