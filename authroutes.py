@@ -51,3 +51,15 @@ def login():
         else:
             return render_template('login.html')
     return render_template('login.html')
+
+# do logout, build route to get accounts
+@auth_blueprint.route('/logout', methods=["GET", "POST"])
+def logout():
+    if request.method == "POST":
+        print('logging out')
+        print('popping customer_id and username from session')
+        session.pop('customer_id', None)
+        session.pop('username', None)
+        return redirect(url_for('index', session=session))
+    return render_template('logout.html')
+    
