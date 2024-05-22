@@ -16,7 +16,7 @@ class AccountService:
     
     def getAccounts(self, customer_id):
         # join customer id by customer id inside accounts table
-        query = f"SELECT username, account_id, balance, account_type FROM Customer c JOIN Account a ON c.customer_id = a.customer_id WHERE c.customer_id = {customer_id};"
+        query = f"SELECT username, account_id, balance, account_type, account_name FROM Customer c JOIN Account a ON c.customer_id = a.customer_id WHERE c.customer_id = {customer_id};"
         
         try:
             # load customer object with data
@@ -28,10 +28,10 @@ class AccountService:
             conn.commit()
             uname = None
             account_list = []
-            for (username, account_id, balance, account_type) in cursor.fetchall():
+            for (username, account_id, balance, account_type, account_name) in cursor.fetchall():
                 print(username, account_id, balance, account_type)
                 uname = username
-                account_list.append((account_id, balance, account_type))
+                account_list.append((account_id, balance, account_type, account_name))
             unmodifiable_account_list = tuple(account_list)
             result_customer = Customer(uname, unmodifiable_account_list)
             return result_customer

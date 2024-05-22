@@ -1,6 +1,7 @@
 import hashlib
 from flask import session
 import mariadb
+from accountservice import AccountService
 
 config = {
      'user': 'root',
@@ -9,6 +10,8 @@ config = {
      'port': 3306,
      'database': 'flask_app',
  }
+
+accservice = AccountService()
 
 class AuthService:
     def __init__(self):
@@ -49,8 +52,6 @@ class AuthService:
         try:
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            print('got cursor')
-            print('executing query ', query)
             cursor.execute(query)
             res = cursor.fetchone()
         finally:
@@ -60,6 +61,8 @@ class AuthService:
         print('res is ', res)
         if res:
             session['customer_id'], session['username'] = res[0], res[1]
+            # create initial account with balance 100.00
+            accservice.createAccount(int(res[0]), f'default {res[1]} account', float(100.00), 'Default Checkings Account')
         
         return session
     
