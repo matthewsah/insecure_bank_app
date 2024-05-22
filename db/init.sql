@@ -9,9 +9,9 @@ CREATE TABLE Customer (
 
 CREATE TABLE Account (
 	account_id INT AUTO_INCREMENT NOT NULL,
-	customer_id int,
+	customer_id INT,
 	account_name VARCHAR(50) NOT NULL,
-	balance INT,
+	balance FLOAT(10,2),
 	account_type VARCHAR(100) NOT NULL,
 	PRIMARY KEY(account_id)
 	-- CONSTRAINT FK_CustomerAccount FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)

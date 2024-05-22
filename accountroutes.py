@@ -19,12 +19,12 @@ def create_account():
                 'balance':  data['balance'],
                 'account_type': data['account_type']
             }
-            pattern = r'(0|[1-9][0-9]*)'
+            pattern = r'(0|[1-9][0-9]*|[1-9][0-9]\.[0-9]{2})'
             if not re.match(pattern, str(data['balance'])):
-                raise ValueError('Unable to create account, please check input data.')
+                raise ValueError('Invalid balance, please check balance amount.')
 
             # print(data['customer_id'], data['account_name'], int(data['balance']), data['account_type'])
-            accservice.createAccount(data1['customer_id'], data1['account_name'], int(data1['balance']), data1['account_type'])
+            accservice.createAccount(data1['customer_id'], data1['account_name'], float(data1['balance']), data1['account_type'])
 
             # go back to customer dashboard
             return redirect(url_for('index', session=session))
@@ -34,7 +34,7 @@ def create_account():
     except ValueError as e:
         return render_template('createaccount.html',
                                title="Create an Account", 
-                               error="Unable to create account, please check input data.")
+                               error=str(e))
 
 @account_blueprint.route('/accounts', methods=['GET'])
 def get_accounts():
