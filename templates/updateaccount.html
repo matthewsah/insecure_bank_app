@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <div><a href="/">Home</a></div>
     <div>
         <p>Account Name: {{ account_name }}</p>
     </div>
@@ -21,7 +22,6 @@
         <button type="submit" onclick="deposit()">deposit</button>
         <button type="submit" onclick="withdraw()">withdraw</button>
     </form>
-    <div><a href="/">Home</a></div>
     {% with err = error %}
         {% if err %}
             <div style="color: red; font-weight: bold;">

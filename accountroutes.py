@@ -31,7 +31,7 @@ def create_account():
         else:
             return render_template('createaccount.html',
                                    title="Create an Account")
-    except Exception as e:
+    except ValueError as e:
         return render_template('createaccount.html',
                                title="Create an Account", 
                                error="Unable to create account, please check input data.")
@@ -103,4 +103,3 @@ def deposit(account_id):
             return redirect(url_for('account.account', account_id=int(account_id)))
     except Exception as e:
         return redirect(url_for('account.account', account_id=int(account_id), error=str(e)))
-

@@ -26,7 +26,7 @@ def signup():
             print('received', data1)
             authservice.register(data1['username'], data1['password'])
             print('registered')
-        
+
             # change to reroute to login page
             return redirect(url_for('auth.login'))
         except:
@@ -48,6 +48,10 @@ def login():
             'password': data['password']
         }
 
+        pattern = r'[_\-\.0-9a-z]'
+        if not re.match(pattern, data['username']):
+            raise ValueError('Unable to sign up, please check input data.')
+        
         print('received', data1)
         print(authservice.login(data1['username'], data1['password']))
 
