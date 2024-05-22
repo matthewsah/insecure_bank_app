@@ -18,7 +18,7 @@
     </div>
     <form id="withdrawDepositForm" method="POST">
         <label for="change">Balance: </label>
-        <input type="number" name="change" min="0">
+        <input type="number" name="change" step="0.01" min="0" placeholder="0.00" oninput="validateDecimal(this)">
         <button type="submit" onclick="deposit()">deposit</button>
         <button type="submit" onclick="withdraw()">withdraw</button>
     </form>
@@ -42,6 +42,14 @@
             form.method="POST";
             form.action = (window.location.href).split("?error")[0] + "/deposit";
             form.submit();
+        }
+
+        function validateDecimal(input) {
+            const value = input.value;
+            const regex = /^\d*(\.\d{0,2})?$/;
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
         }
     </script>
 </body>

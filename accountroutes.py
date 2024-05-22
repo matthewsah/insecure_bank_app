@@ -66,10 +66,10 @@ def withdraw(account_id):
             acct = accservice.getAccountById(int(account_id))
             data = request.form
             data1 = {
-                'change': int(data['change'])
+                'change': float(data['change'])
             }
 
-            pattern = r'(0|[1-9][0-9]*)'
+            pattern = r'(0|[1-9][0-9]*)(\.\d{1,2})?'
             if not re.match(pattern, str(data['change'])):
                 raise ValueError('Invalid withdrawal amount')
             
@@ -88,10 +88,10 @@ def deposit(account_id):
             acct = accservice.getAccountById(int(account_id))
             data = request.form
             data1 = {
-                'change': int(data['change'])
+                'change': float(data['change'])
             }
 
-            pattern = r'(0|[1-9][0-9]*)'
+            pattern = r'(0|[1-9][0-9]*)(\.\d{1,2})?'
             if not re.match(pattern, str(data['change'])):
                 raise ValueError('Invalid deposit amount.')
             
