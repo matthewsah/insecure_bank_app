@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session, request
 from accountservice import AccountService
+import re
 
 account_blueprint = Blueprint('account', __name__)
 
@@ -11,54 +12,65 @@ def create_account():
         if request.method == 'POST':
             data = request.form
 
-            # print(data['account_name'])
+            # get data from form input
             data1 = {
-                'customer_id': data['customer_id'],
+                'customer_id': session['customer_id'],
                 'account_name': data['account_name'],
                 'balance':  data['balance'],
                 'account_type': data['account_type']
             }
 
-            # print(data['customer_id'], data['account_name'], int(data['balance']), data['account_type'])
-            accservice.createAccount(data1['customer_id'], data1['account_name'], int(data1['balance']), data1['account_type'])
+            # validate inputs
+            pattern = r'(0|[1-9][0-9]*|[1-9][0-9]\.[0-9]{2})'
+            if not re.match(pattern, str(data['balance'])):
+                raise ValueError('Invalid balance, please check balance amount.')
+
+            # insert account data into table
+            accservice.createAccount(data1['customer_id'], data1['account_name'], float(data1['balance']), data1['account_type'])
 
             # go back to customer dashboard
-            return data1
+            return redirect(url_for('index', session=session))
         else:
             return render_template('createaccount.html',
                                    title="Create an Account")
-    except Exception as e:
+    except ValueError as e:
         return render_template('createaccount.html',
                                title="Create an Account", 
-                               error="Unable to create account, please check input data.")
+                               error=str(e))
 
 @account_blueprint.route('/account/<int:account_id>', methods=['GET'])
-def account(account_id, error=None):
+def account(account_id):
     try:
-        if not not error:
-            raise ValueError("Invalid input for withdrawal or deposit")
         if request.method == 'GET':
+            # Get a single account
             acct = accservice.getAccountById(int(account_id))
 
-            # TODO convert to html
-            # return jsonify({'account_id': acct.account_id, 'account_name': acct.account_name, 'balance': acct.balance, 'account_type': acct.account_type})
+            # Render the update account html page
             return render_template('updateaccount.html', 
                                    title="Update Account", 
                                    account_name=acct.account_name, 
-                                   balance=acct.balance)
+                                   balance=acct.balance,
+                                   error=request.args.get('error'))
     except Exception as e:
         return None
 
 @account_blueprint.route('/account/<int:account_id>/withdraw', methods=['POST'])
-def withdraw(account_id, error=None):
+def withdraw(account_id):
     try:
         if request.method == 'POST':
             acct = accservice.getAccountById(int(account_id))
             data = request.form
             data1 = {
-                'change': int(data['change'])
+                'change': float(data['change'])
             }
+
+            # verifying withdrawal amount
+            pattern = r'(0|[1-9][0-9]*)(\.\d{1,2})?'
+            if not re.match(pattern, str(data['change'])):
+                raise ValueError('Invalid withdrawal amount')
+            
             accservice.withdraw(int(account_id), data1['change'])
+
             return redirect(url_for('account.account', account_id=int(account_id)))
         else:
             return redirect(url_for('account.account', account_id=int(account_id)))
@@ -72,13 +84,19 @@ def deposit(account_id):
             acct = accservice.getAccountById(int(account_id))
             data = request.form
             data1 = {
-                'change': int(data['change'])
+                'change': float(data['change'])
             }
-            # TODO make withdraw return a snapshot of the account data
+
+            # verifying deposity errors
+            pattern = r'(0|[1-9][0-9]*)(\.\d{1,2})?'
+            if not re.match(pattern, str(data['change'])):
+                raise ValueError('Invalid deposit amount.')
+            
+            # use account service to deposit money
             accservice.deposit(int(account_id), data1['change'])
+
             return redirect(url_for('account.account', account_id=int(account_id)))
         else:
             return redirect(url_for('account.account', account_id=int(account_id)))
     except Exception as e:
         return redirect(url_for('account.account', account_id=int(account_id), error=str(e)))
-

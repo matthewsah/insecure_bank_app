@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Logout</h1>
+<form method="post">
+    <p>You are signed in as {{session.username}}, click the button below to logout</p>
+    <button type="submit">logout</button>
+</form>
 {% endblock %}

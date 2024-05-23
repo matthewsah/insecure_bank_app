@@ -7,6 +7,15 @@
     <input type="text" id="username" name="username"/>
     <label for="password">Password</label>
     <input type="password" id="password" name="password"/>
+    <label for="balance">Initial Balance</label>
+    <input type="number" id="balance" name="balance" step=".01" value="100.00"/>
     <button type="submit">Submit</button>
 </form>
+{% with err = error %}
+{% if err %}
+<div style="color: red; font-weight: bold;">
+    {{ err }}
+</div>
+{% endif %}
+{% endwith %}
 {% endblock %}
