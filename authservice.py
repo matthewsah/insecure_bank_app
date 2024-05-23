@@ -17,23 +17,20 @@ class AuthService:
     def __init__(self):
         pass
 
-    def register(self, username, password):
-        print('making db connection')
-        print('connection made')
+    def register(self, username, password, balance=100.00):
         sha1_hash = hashlib.sha1()
         sha1_hash.update(password.encode('utf-8'))
         hashed_pass = sha1_hash.hexdigest()
         query = f"INSERT INTO Customer (username, password) VALUES ('{username}', '{hashed_pass}');"
-        print('query is ', query)
 
         try:
             conn = mariadb.connect(**config)
-            print('getting cursor')
             cursor = conn.cursor()
-            print('got cursor')
             cursor.execute(query)
-            print('executing query')
             conn.commit()
+
+            # create initial account with balance 100.00
+            accservice.createAccount(cursor.lastrowid, f'default {username} account', balance, 'Default Checkings Account')
         except Exception as exception:
             print('caught exception:', exception)
         finally:
@@ -61,8 +58,6 @@ class AuthService:
         print('res is ', res)
         if res:
             session['customer_id'], session['username'] = res[0], res[1]
-            # create initial account with balance 100.00
-            accservice.createAccount(int(res[0]), f'default {res[1]} account', float(100.00), 'Default Checkings Account')
         
         return session
     
