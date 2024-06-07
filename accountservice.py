@@ -15,14 +15,12 @@ class AccountService:
         pass
     
     def getAccounts(self, customer_id):
-        # join customer id by customer id inside accounts table
-        query = f"SELECT username, account_id, balance, account_type, account_name FROM Customer c JOIN Account a ON c.customer_id = a.customer_id WHERE c.customer_id = {customer_id};"
-        
         try:
             # load customer object with data
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            cursor.execute(query)
+            # join customer id by customer id inside accounts table
+            cursor.execute("SELECT username, account_id, balance, account_type, account_name FROM Customer c JOIN Account a ON c.customer_id = a.customer_id WHERE c.customer_id = ?;", (customer_id,))
             conn.commit()
             uname = None
             account_list = []
@@ -44,13 +42,12 @@ class AccountService:
 	
     def getAccountById(self, account_id):
         # get specific account within customer
-        query = f"SELECT account_id, account_name, balance, account_type FROM Account WHERE account_id={account_id};"
 
         try:
             # run sql query
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            cursor.execute(query)
+            cursor.execute("SELECT account_id, account_name, balance, account_type FROM Account WHERE account_id=?;", (account_id,))
             conn.commit()
 
             # get single account by id
@@ -70,7 +67,7 @@ class AccountService:
         try:
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO Account VALUES (DEFAULT, ?, ?, ?, ?)", (customer_id, account_name, balance, account_type))
+            cursor.execute("INSERT INTO Account VALUES (DEFAULT, ?, ?, ?, ?);", (customer_id, account_name, balance, account_type))
             conn.commit()
         finally:
             cursor.close()
@@ -89,13 +86,11 @@ class AccountService:
         if balance < 0:
             raise ValueError(f"Cannot withdraw more than balance: {result_account.balance}")
 
-        # update result_account.balance - change
-        query = f"UPDATE Account SET balance = {balance} WHERE account_id = {account_id};"
-
         try:
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            cursor.execute(query)
+            # update result_account.balance - change
+            cursor.execute("UPDATE Account SET balance = ? WHERE account_id = ?;", (balance, account_id))
             conn.commit()
         finally:
             cursor.close()
@@ -116,14 +111,12 @@ class AccountService:
 
         if balance < 0:
             raise ValueError(f"Cannot withdraw more than balance: {result_account.balance}")
-
-        # update result_account.balance + change
-        query = f"UPDATE Account SET balance = {balance} WHERE account_id = {account_id};"
         
         try:
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            cursor.execute(query)
+            # update result_account.balance + change
+            cursor.execute("UPDATE Account SET balance = ? WHERE account_id = ?;", (balance, account_id))
             conn.commit()
         finally:
             cursor.close()
