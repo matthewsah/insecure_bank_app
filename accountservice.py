@@ -65,14 +65,11 @@ class AccountService:
         return None
     
     def createAccount(self, customer_id, account_name, balance, account_type):
-        # create account based on balance and account type
-        query = f"INSERT INTO Account VALUES (DEFAULT, {customer_id}, '{account_name}', {balance}, '{account_type}');"
-
         # update database with mysql
         try:
             conn = mariadb.connect(**config)
             cursor = conn.cursor()
-            cursor.execute(query)
+            cursor.execute("INSERT INTO Account VALUES (DEFAULT, ?, ?, ?, ?)", (customer_id, account_name, balance, account_type))
             conn.commit()
         finally:
             cursor.close()
