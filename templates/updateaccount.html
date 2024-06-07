@@ -14,7 +14,7 @@
         <p>Account Name: {{ account_name }}</p>
     </div>
     <div>
-        <p>Balance: {{ balance }}</p>
+        <p>Balance: {{ '{0:.2f}'.format(balance) }}</p>
     </div>
     <form id="withdrawDepositForm" method="POST">
         <label for="change">Balance: </label>

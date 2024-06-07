@@ -12,7 +12,7 @@ class Account:
             raise ValueError("invalid account type")
         if not account_name:
             raise ValueError("invalid account name")
-        self._account_id = account_id
+        self.account_id = account_id
         self.account_name = account_name
         self.balance = balance
         self.account_type = account_type
