@@ -2,6 +2,7 @@ import hashlib
 from flask import session
 import mariadb
 from accountservice import AccountService
+from flask import current_app
 
 config = {
      'user': 'root',
@@ -58,6 +59,7 @@ class AuthService:
         print('res is ', res)
         if res:
             session['customer_id'], session['username'] = res[0], res[1]
+            session['secret_key'] = current_app.config['SECRET_KEY']
         
         return session
     
