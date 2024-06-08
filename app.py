@@ -6,9 +6,6 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# allow different origins to access the api
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
 app.config['SECRET_KEY'] = 'x162klqzp23p01nIug'
 
 accservice = AccountService()
