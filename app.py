@@ -37,7 +37,7 @@ def index():
         if 'username' in session:
             customer_data = accservice.getAccounts(session['customer_id'])
     except Exception as e:
-        return jsonify({'error': 'Bad Request'}), 400
+        return jsonify({'error': f'{e}'}), 400
     return render_template('index.html', title="Homepage", session=session, customer=customer_data)
 
 # Apply CORS to account blueprint

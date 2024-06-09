@@ -5,8 +5,22 @@ import re
 account_blueprint = Blueprint('account', __name__)
 
 accservice = AccountService()
+
+# Define a list of trusted domains
+trusted_domains = ["localhost", "127.0.0.1"]
+
+# Custom decorator to check if the URL is whitelisted
+def whitelist_redirect(func):
+    def wrapper(*args, **kwargs):
+        url = request.args.get('url')
+        if any(domain in url for domain in trusted_domains):
+            return func(*args, **kwargs)
+        else:
+            return redirect('/')
+    return wrapper
     
 @account_blueprint.route('/account', methods=['GET', 'POST'])
+@whitelist_redirect
 def create_account():
     try:
         if request.method == 'POST':
