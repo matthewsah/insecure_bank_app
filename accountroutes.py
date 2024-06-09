@@ -58,7 +58,7 @@ def account(account_id):
             return render_template('updateaccount.html', 
                                    title="Update Account", 
                                    account_name=acct.account_name, 
-                                   balance=acct.balance,
+                                   balance=acct.balance.amount,
                                    error=request.args.get('error'))
     except Exception as e:
         return None
