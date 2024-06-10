@@ -13,6 +13,8 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
 
 app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+# app.config['SESSION_COOKIE_SECURE'] = True
 
 accservice = AccountService()
 
@@ -38,7 +40,7 @@ def index():
             customer_data = accservice.getAccounts(session['customer_id'])
     except Exception as e:
         return jsonify({'error': f'{e}'}), 400
-    return render_template('index.html', title="Homepage", session=session, customer=customer_data)
+    return render_template('index.html', title="Homepage", sess=session, customer=customer_data)
 
 # Apply CORS to account blueprint
 cors_account = CORS(account_blueprint, resources={r"/*": {"origins": "http://localhost:8080"}})

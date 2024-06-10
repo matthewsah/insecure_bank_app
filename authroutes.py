@@ -33,7 +33,7 @@ def signup():
 
             # change to reroute to login page
             return redirect(url_for('auth.login'))
-        except:
+        except Exception as e:
             return render_template('signup.html',
                                 title="Sign Up", 
                                 error="Unable to sign up, please check input data.")
@@ -56,11 +56,13 @@ def login():
             raise ValueError('Unable to sign up, please check input data.')
         
         # login using auth service
-        session = authservice.login(data1['username'], data1['password'])
+        sess = authservice.login(data1['username'], data1['password'])
+        print(sess)
+        print(session)
 
         # make sure only to go to index with session when user is logged in
         if 'username' in session:
-            return redirect(url_for('index', session=session))
+            return redirect(url_for('index', sess=sess))
         else:
             return render_template('login.html')
     return render_template('login.html')
