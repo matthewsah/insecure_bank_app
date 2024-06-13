@@ -2,6 +2,7 @@ import hashlib
 from flask import session
 import mariadb
 from accountservice import AccountService
+from flask import current_app
 
 config = {
      'user': 'root',
@@ -33,6 +34,7 @@ class AuthService:
             accservice.createAccount(cursor.lastrowid, f'default {username} account', balance, 'Default Checkings Account')
         except Exception as exception:
             print('caught exception:', exception)
+            raise ValueError(str(exception))
         finally:
             cursor.close()
             conn.close()
@@ -43,8 +45,6 @@ class AuthService:
         hashed_pass = sha1_hash.hexdigest()
         query = f"SELECT customer_id, username FROM Customer WHERE username='{username}' AND password='{hashed_pass}';"
         
-        # customer_id = None
-        # username = None
         res = None
         try:
             conn = mariadb.connect(**config)
@@ -55,9 +55,10 @@ class AuthService:
             cursor.close()
             conn.close()
         
-        print('res is ', res)
         if res:
             session['customer_id'], session['username'] = res[0], res[1]
+            session['secret_key'] = current_app.config['SECRET_KEY']
+            return {'customer_id': session['customer_id'], 'username': session['username']}
         
-        return session
+        return {}
     

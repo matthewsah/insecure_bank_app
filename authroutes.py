@@ -33,7 +33,7 @@ def signup():
 
             # change to reroute to login page
             return redirect(url_for('auth.login'))
-        except:
+        except Exception as e:
             return render_template('signup.html',
                                 title="Sign Up", 
                                 error="Unable to sign up, please check input data.")
@@ -55,11 +55,14 @@ def login():
         if not re.match(pattern, data['username']):
             raise ValueError('Unable to sign up, please check input data.')
         
-        authservice.login(data1['username'], data1['password'])
+        # login using auth service
+        sess = authservice.login(data1['username'], data1['password'])
+        print(sess)
+        print(session)
 
         # make sure only to go to index with session when user is logged in
         if 'username' in session:
-            return redirect(url_for('index', session=session))
+            return redirect(url_for('index', sess=sess))
         else:
             return render_template('login.html')
     return render_template('login.html')
@@ -71,6 +74,7 @@ def logout():
         # delete critical user information from session once logged out
         session.pop('customer_id', None)
         session.pop('username', None)
+        session.pop('secret_key', None)
         return redirect(url_for('index', session=session))
     return render_template('logout.html')
     

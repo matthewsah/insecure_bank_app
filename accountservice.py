@@ -1,6 +1,7 @@
 import mariadb
 from customer import Customer
 from account import Account
+from balance import Balance
 
 config = {
      'user': 'root',
@@ -55,8 +56,8 @@ class AccountService:
 
             # get single account by id
             for (acc_id, account_name, balance, account_type) in cursor:
-                result_account = Account(acc_id, account_name, balance, account_type)
-
+                result_account = Account(acc_id, account_name, Balance(balance), account_type)
+            print(result_account.__dict__)
             # return result account
             return result_account
         finally:
@@ -84,7 +85,7 @@ class AccountService:
         result_account = self.getAccountById(account_id)
 
         # validate balance
-        balance = result_account.balance - change
+        balance = result_account.balance.amount - change
 
         if balance < 0:
             raise ValueError(f"Cannot withdraw more than balance: {result_account.balance}")
@@ -109,13 +110,13 @@ class AccountService:
         result_account = self.getAccountById(account_id)
 
         # validate balance
-        balance = result_account.balance + change
+        balance = result_account.balance.amount + change
 
         if balance > 4294967295.99:
             raise ValueError(f"Cannot deposit more than {4294967295.99}")
 
         if balance < 0:
-            raise ValueError(f"Cannot withdraw more than balance: {result_account.balance}")
+            raise ValueError(f"Cannot deposit balance: {result_account.balance}")
 
         # update result_account.balance + change
         query = f"UPDATE Account SET balance = {balance} WHERE account_id = {account_id};"

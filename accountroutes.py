@@ -9,6 +9,12 @@ accservice = AccountService()
 @account_blueprint.route('/account', methods=['GET', 'POST'])
 def create_account():
     try:
+        if not 'username' in session:
+            return redirect(url_for('index', session=session))
+
+        if not any(domain in request.url for domain in ['localhost', '127.0.0.1']):
+            return redirect(url_for('index', session=session))
+
         if request.method == 'POST':
             data = request.form
 
@@ -41,6 +47,9 @@ def create_account():
 @account_blueprint.route('/account/<int:account_id>', methods=['GET'])
 def account(account_id):
     try:
+        if not 'username' in session:
+            return redirect(url_for('index', session=session))
+        
         if request.method == 'GET':
             # Get a single account
             acct = accservice.getAccountById(int(account_id))
@@ -49,7 +58,7 @@ def account(account_id):
             return render_template('updateaccount.html', 
                                    title="Update Account", 
                                    account_name=acct.account_name, 
-                                   balance=acct.balance,
+                                   balance=acct.balance.amount,
                                    error=request.args.get('error'))
     except Exception as e:
         return None
@@ -57,6 +66,9 @@ def account(account_id):
 @account_blueprint.route('/account/<int:account_id>/withdraw', methods=['POST'])
 def withdraw(account_id):
     try:
+        if not 'username' in session:
+            return redirect(url_for('index', session=session))
+        
         if request.method == 'POST':
             acct = accservice.getAccountById(int(account_id))
             data = request.form
@@ -80,6 +92,9 @@ def withdraw(account_id):
 @account_blueprint.route('/account/<int:account_id>/deposit', methods=['POST'])
 def deposit(account_id):
     try:
+        if not 'username' in session:
+            return redirect(url_for('index', session=session))
+
         if request.method == 'POST':
             acct = accservice.getAccountById(int(account_id))
             data = request.form
